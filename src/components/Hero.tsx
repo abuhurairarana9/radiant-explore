@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Canvas3D from "./Canvas3D";
 import { useTheme } from "@/hooks/useTheme";
+import { ArrowDownCircle } from "lucide-react";
 
 const Hero = () => {
   const { theme } = useTheme();
@@ -13,11 +14,32 @@ const Hero = () => {
       opacity: 1,
       y: 0,
       transition: {
-        delay: 0.2 + i * 0.1,
+        delay: 0.3 + i * 0.1,
         duration: 0.8,
         ease: [0.16, 1, 0.3, 1]
       }
     })
+  };
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        delay: 0.7,
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    },
+    hover: { 
+      y: -5,
+      transition: {
+        yoyo: Infinity,
+        duration: 1.5,
+        ease: "easeInOut"
+      }
+    }
   };
 
   return (
@@ -27,9 +49,9 @@ const Hero = () => {
           <Canvas3D dark={theme === "dark"} />
         </div>
         
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10">
+        <div className="absolute inset-0 z-10 flex flex-col justify-end sm:justify-center items-center p-6 md:p-12">
           <motion.div
-            className="flex flex-col max-w-4xl mx-auto"
+            className="container flex flex-col items-center text-center max-w-4xl mx-auto"
             initial="hidden"
             animate="visible"
             variants={{
@@ -37,16 +59,18 @@ const Hero = () => {
               visible: { opacity: 1 }
             }}
           >
-            <motion.p
-              className="text-sm md:text-base font-medium text-muted-foreground"
+            <motion.div
               custom={0}
               variants={textVariants}
+              className="glass px-6 py-3 rounded-full mb-6 backdrop-blur-2xl"
             >
-              CTO & Blockchain Developer
-            </motion.p>
+              <span className="text-sm md:text-base font-medium text-primary">
+                CTO & Blockchain Developer
+              </span>
+            </motion.div>
             
             <motion.h1
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mt-2 mb-4 tracking-tight"
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent"
               custom={1}
               variants={textVariants}
             >
@@ -54,7 +78,7 @@ const Hero = () => {
             </motion.h1>
             
             <motion.p
-              className="text-lg md:text-xl text-muted-foreground max-w-2xl"
+              className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-8"
               custom={2}
               variants={textVariants}
             >
@@ -62,34 +86,16 @@ const Hero = () => {
               Currently CTO at BlockMobLabs, developing cutting-edge trading solutions.
             </motion.p>
             
-            <motion.div
-              className="mt-8"
-              custom={3}
-              variants={textVariants}
+            <motion.a
+              href="#about"
+              className="flex items-center justify-center w-12 h-12 rounded-full glass backdrop-blur-xl text-primary hover:text-primary-foreground hover:bg-primary transition-colors duration-300"
+              variants={buttonVariants}
+              animate="visible"
+              initial="hidden"
+              whileHover="hover"
             >
-              <motion.a
-                href="#about"
-                className="inline-flex items-center px-6 py-3 border border-primary rounded-full text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Discover More
-                <svg
-                  className="ml-2 w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </motion.a>
-            </motion.div>
+              <ArrowDownCircle className="w-5 h-5" />
+            </motion.a>
           </motion.div>
         </div>
       </div>

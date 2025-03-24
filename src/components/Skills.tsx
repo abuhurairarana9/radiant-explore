@@ -1,10 +1,12 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { Progress } from "@/components/ui/progress";
 
 const skills = [
   {
     category: "Frontend",
+    icon: "🌐",
     technologies: [
       { name: "React.js", proficiency: 90 },
       { name: "Next.js", proficiency: 85 },
@@ -15,6 +17,7 @@ const skills = [
   },
   {
     category: "Backend",
+    icon: "⚙️",
     technologies: [
       { name: "Node.js", proficiency: 85 },
       { name: "Express.js", proficiency: 80 },
@@ -25,6 +28,7 @@ const skills = [
   },
   {
     category: "Blockchain",
+    icon: "🔗",
     technologies: [
       { name: "Solidity", proficiency: 85 },
       { name: "Smart Contracts", proficiency: 80 },
@@ -35,6 +39,7 @@ const skills = [
   },
   {
     category: "DevOps",
+    icon: "🚀",
     technologies: [
       { name: "Docker", proficiency: 75 },
       { name: "AWS", proficiency: 70 },
@@ -45,31 +50,30 @@ const skills = [
   },
 ];
 
-const SkillCard = ({ category, technologies }) => {
+const SkillCard = ({ category, technologies, icon }) => {
   return (
     <motion.div
-      className="glass rounded-2xl p-6"
-      whileHover={{ y: -5 }}
+      className="glass rounded-2xl p-6 h-full backdrop-blur-xl border border-primary/10"
+      whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}
       transition={{ duration: 0.3 }}
     >
-      <h3 className="text-xl font-bold mb-4">{category}</h3>
+      <div className="flex items-center mb-4">
+        <span className="text-2xl mr-2">{icon}</span>
+        <h3 className="text-xl font-bold">{category}</h3>
+      </div>
       <div className="space-y-4">
         {technologies.map((tech, index) => (
           <div key={index} className="space-y-1">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">{tech.name}</span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                 {tech.proficiency}%
               </span>
             </div>
-            <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-primary"
-                initial={{ width: 0 }}
-                animate={{ width: `${tech.proficiency}%` }}
-                transition={{ duration: 1, delay: 0.2 + index * 0.1 }}
-              />
-            </div>
+            <Progress 
+              value={tech.proficiency} 
+              className="h-1.5 bg-muted"
+            />
           </div>
         ))}
       </div>
@@ -104,17 +108,21 @@ const Skills = () => {
   return (
     <section
       id="skills"
-      className="portfolio-section section-padding"
+      className="portfolio-section section-padding bg-gradient-to-b from-background to-background/80"
       ref={sectionRef}
     >
       <motion.div
-        className="max-w-6xl mx-auto"
+        className="container max-w-6xl mx-auto"
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
         <motion.div variants={itemVariants} className="mb-16 text-center">
-          <h2 className="section-heading text-gradient">Skills & Tech Stack</h2>
+          <div className="inline-block mb-3">
+            <div className="w-16 h-1 bg-primary mx-auto mb-2"></div>
+            <div className="w-10 h-1 bg-primary mx-auto"></div>
+          </div>
+          <h2 className="section-heading bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent">Skills & Tech Stack</h2>
           <p className="section-subheading">
             My technical expertise spans frontend, backend, blockchain, and DevOps technologies.
           </p>

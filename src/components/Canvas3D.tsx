@@ -6,7 +6,7 @@ import {
   PerspectiveCamera, 
   Environment, 
   Float, 
-  Text, 
+  Text,
   Icosahedron
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -39,8 +39,10 @@ const FloatingParticle = ({ position, color, size, speed, axis }) => {
       <icosahedronGeometry args={[size, 1]} />
       <meshStandardMaterial
         color={color}
-        roughness={0.5}
-        metalness={0.8}
+        roughness={0.2}
+        metalness={0.9}
+        emissive={color}
+        emissiveIntensity={0.4}
       />
     </mesh>
   );
@@ -48,14 +50,18 @@ const FloatingParticle = ({ position, color, size, speed, axis }) => {
 
 // Particles Group
 const ParticlesGroup = () => {
-  const particles = Array.from({ length: 15 }, (_, i) => ({
+  const particles = Array.from({ length: 25 }, (_, i) => ({
     id: i,
     position: [
-      (Math.random() - 0.5) * 10,
-      (Math.random() - 0.5) * 10,
-      (Math.random() - 0.5) * 10
+      (Math.random() - 0.5) * 12,
+      (Math.random() - 0.5) * 12,
+      (Math.random() - 0.5) * 12
     ],
-    color: i % 2 === 0 ? "#ffffff" : "#888888",
+    color: i % 3 === 0 
+      ? "#4361ee" 
+      : i % 3 === 1 
+        ? "#3a0ca3" 
+        : "#7209b7",
     size: Math.random() * 0.3 + 0.1,
     speed: Math.random() * 0.5 + 0.5,
     axis: ['x', 'y', 'z'][Math.floor(Math.random() * 3)]
@@ -74,37 +80,41 @@ const ParticlesGroup = () => {
 const FloatingText = ({ dark }) => {
   return (
     <Float
-      speed={3}
-      rotationIntensity={0.5}
-      floatIntensity={1}
+      speed={2}
+      rotationIntensity={0.2}
+      floatIntensity={0.5}
       position={[0, 0, 0]}
     >
       <Text
         font="/fonts/Inter-Bold.woff"
-        fontSize={1.2}
+        fontSize={1.5}
         position={[0, 0, 0]}
         letterSpacing={-0.05}
         color={dark ? "#ffffff" : "#000000"}
+        textAlign="center"
       >
         Abu Huraira
         <meshStandardMaterial 
-          roughness={0.3} 
-          metalness={0.8} 
+          roughness={0.1} 
+          metalness={0.9} 
           color={dark ? "#ffffff" : "#000000"} 
+          emissive={dark ? "#333333" : "#cccccc"}
+          emissiveIntensity={0.5}
         />
       </Text>
       <Text
         font="/fonts/Inter-Light.woff"
         fontSize={0.5}
-        position={[0, -0.8, 0]}
+        position={[0, -1.2, 0]}
         letterSpacing={0.05}
-        color={dark ? "#888888" : "#555555"}
+        color={dark ? "#a1a1aa" : "#71717a"}
+        textAlign="center"
       >
         CTO & Blockchain Developer
         <meshStandardMaterial 
-          roughness={0.5} 
-          metalness={0.2} 
-          color={dark ? "#888888" : "#555555"} 
+          roughness={0.3} 
+          metalness={0.5} 
+          color={dark ? "#a1a1aa" : "#71717a"}
         />
       </Text>
     </Float>
@@ -128,9 +138,11 @@ const AnimatedSphere = () => {
     >
       <sphereGeometry args={[1, 64, 64]} />
       <meshStandardMaterial
-        color="#1e88e5"
-        roughness={0.2}
-        metalness={0.8}
+        color="#4cc9f0"
+        roughness={0.1}
+        metalness={0.9}
+        emissive="#4361ee"
+        emissiveIntensity={0.2}
       />
     </mesh>
   );
@@ -150,6 +162,14 @@ const SceneSetup = ({ children, dark }) => {
 
   return (
     <>
+      <color attach="background" args={[dark ? '#030712' : '#f8fafc']} />
+      <fog attach="fog" args={[dark ? '#030712' : '#f8fafc', 5, 20]} />
+      <ambientLight intensity={dark ? 0.3 : 0.5} />
+      <directionalLight 
+        position={[5, 5, 5]} 
+        intensity={dark ? 0.5 : 0.8} 
+        castShadow
+      />
       <PerspectiveCamera makeDefault position={[0, 0, 6]} />
       <OrbitControls
         ref={controlsRef}
@@ -157,9 +177,11 @@ const SceneSetup = ({ children, dark }) => {
         enablePan={false}
         minPolarAngle={Math.PI / 2.5}
         maxPolarAngle={Math.PI / 1.5}
-        rotateSpeed={0.3}
+        rotateSpeed={0.2}
+        dampingFactor={0.05}
+        enableDamping
       />
-      <Environment preset={dark ? "night" : "studio"} />
+      <Environment preset={dark ? "night" : "sunset"} />
       {children}
     </>
   );
@@ -168,7 +190,12 @@ const SceneSetup = ({ children, dark }) => {
 // Main Component
 const Canvas3D = ({ dark }) => {
   return (
-    <Canvas style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+    <Canvas 
+      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+      dpr={[1, 2]}
+      camera={{ position: [0, 0, 6], fov: 45 }}
+      shadows
+    >
       <Suspense fallback={null}>
         <SceneSetup dark={dark}>
           <ParticlesGroup />
