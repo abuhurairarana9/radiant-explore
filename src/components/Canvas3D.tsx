@@ -3,17 +3,12 @@ import React, { useRef, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { 
   OrbitControls, 
-  useGLTF, 
   PerspectiveCamera, 
   Environment, 
   Float, 
-  Text3D, 
   Text, 
-  MeshDistortMaterial,
   Icosahedron
 } from "@react-three/drei";
-import { motion } from "framer-motion-3d";
-import { MotionConfig } from "framer-motion";
 import * as THREE from "three";
 
 // Floating Particle Component
@@ -42,11 +37,8 @@ const FloatingParticle = ({ position, color, size, speed, axis }) => {
   return (
     <mesh ref={mesh} position={position}>
       <icosahedronGeometry args={[size, 1]} />
-      <MeshDistortMaterial
+      <meshStandardMaterial
         color={color}
-        speed={0.5}
-        distort={0.3}
-        radius={1}
         roughness={0.5}
         metalness={0.8}
       />
@@ -130,22 +122,17 @@ const AnimatedSphere = () => {
   });
 
   return (
-    <motion.mesh
+    <mesh
       ref={sphere}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
       position={[3, 0, 0]}
     >
       <sphereGeometry args={[1, 64, 64]} />
-      <MeshDistortMaterial
+      <meshStandardMaterial
         color="#1e88e5"
-        attach="material"
-        distort={0.4}
-        speed={1.5}
         roughness={0.2}
         metalness={0.8}
       />
-    </motion.mesh>
+    </mesh>
   );
 };
 
@@ -181,17 +168,15 @@ const SceneSetup = ({ children, dark }) => {
 // Main Component
 const Canvas3D = ({ dark }) => {
   return (
-    <MotionConfig transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-      <Canvas style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-        <Suspense fallback={null}>
-          <SceneSetup dark={dark}>
-            <ParticlesGroup />
-            <FloatingText dark={dark} />
-            <AnimatedSphere />
-          </SceneSetup>
-        </Suspense>
-      </Canvas>
-    </MotionConfig>
+    <Canvas style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+      <Suspense fallback={null}>
+        <SceneSetup dark={dark}>
+          <ParticlesGroup />
+          <FloatingText dark={dark} />
+          <AnimatedSphere />
+        </SceneSetup>
+      </Suspense>
+    </Canvas>
   );
 };
 
